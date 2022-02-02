@@ -134,7 +134,6 @@ plotDensities = function(ns, means, sigma.2, alpha) {
   axis(side = 1)
   axis(side = 2)
   
-  points(x, dfs_null, ty = "l", pch = 5)
   x_quantil = qt(1 - alpha, sum(ns) - 2)
   polygon(c(0, x[x < x_quantil], x_quantil),
           c(0, dfs_null[x < x_quantil], 0),
@@ -144,6 +143,8 @@ plotDensities = function(ns, means, sigma.2, alpha) {
           c(0, dfs_null[x > x_quantil], 0),
           col = "red",
           border = NA)
+  points(x, dfs_null, ty = "l", pch = 5)
+  
   
   segments(x_quantil, 0, x_quantil, .6)
   t_krit = round(x_quantil, 2)
@@ -168,13 +169,9 @@ plotDensities = function(ns, means, sigma.2, alpha) {
   
   ncp = ((means[2] - means[1]) / sqrt(sigma.2)) * sqrt(sum(ns)/4) #ncp (vgl. power.t.test)
   dfs_h1 = dt(x, sum(ns) - 2, ncp)
-  points(x,
-         dfs_h1,
-         ty = "l",
-         pch = 5,
-         col = "black")
+
   polygon(
-    c(0, x[x < x_quantil], x_quantil),
+    c(min(x), x[x < x_quantil], x_quantil),
     c(0, dfs_h1[x < x_quantil], 0),
     col = "orange",
     border = NA,
@@ -187,6 +184,11 @@ plotDensities = function(ns, means, sigma.2, alpha) {
     border = NA,
     lty = 0
   )
+  points(x,
+         dfs_h1,
+         ty = "l",
+         pch = 5,
+         col = "black")
   segments(x_quantil, 0, x_quantil, .6)
   text(x = x_quantil, y = 0.65, bquote(t[krit] ~ "=" ~ .(t_krit)), cex = 1.5)
   points(x,
